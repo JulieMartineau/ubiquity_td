@@ -7,6 +7,7 @@ use Ubiquity\utils\http\USession;
 
 /**
  * Controller TodosController
+ * @property \Ajax\php\ubiquity\JsUtils $jquery
  **/
 class TodosController extends ControllerBase{
     const CACHE_KEY = 'datas/lists/';
@@ -71,7 +72,9 @@ class TodosController extends ControllerBase{
 
 
 	#[Get(path: "todos/new/{force}", name: 'todos.new')]
-	public function newlist($force){
+	public function newlist($force=false){
+        USession::set(self::LIST_SESSION_KEY,[]);
+        $this->displayList([]);
 		
 	}
 
@@ -84,8 +87,8 @@ class TodosController extends ControllerBase{
 
 	
 	private function displayList($list){
-
-        $this->loadView('TodosController/displayList.html', ['list'=>$list]);
+        $this->jquery->change('#multiple','$(".form").toggle();');
+        $this->jquery->renderView('TodosController/displayList.html', ['list'=>$list]);
 
 	}
 
