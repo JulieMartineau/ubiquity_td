@@ -2,6 +2,7 @@
 namespace controllers;
 use Ubiquity\attributes\items\router\Route;
 use Ubiquity\attributes\items\router\Post;
+use Ubiquity\controllers\Router;
 use Ubiquity\utils\http\USession;
 
 /**
@@ -25,7 +26,9 @@ class TodosController extends ControllerBase{
             $list = USession::get(self::LIST_SESSION_KEY, []);
             return $this->display($list);
         }
-        $this->showMessage('Bienvenue !','TodoLists permet de gerer des listes...','info','info circle outline');
+        $this->showMessage('Bienvenue !','TodoLists permet de gerer des listes...','info', 'info circle',
+            [['url'=>Router::path('todos.new'),'caption'=>'Créer une nouvelle liste','style'=>'basic inverted']]);
+
     }
 
 
