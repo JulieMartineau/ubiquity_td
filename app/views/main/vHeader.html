@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-{% block header %}
-	<base href="{{config["siteUrl"]}}">
-	<meta charset="UTF-8">
-	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-	<title>tds</title>
-{% endblock %}
-{% block css %}
-	{{ css('https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css') }}
-	{{css('css/style.css') | raw}}
-{% endblock %}
+	{% block header %}
+		<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=BKqV-Kwre9j8qxDb-xPDIDMUjdWWqnvAOhHmaFsmFAUYCI659JKMhkUhKIkfHsUynZ2SrAYInqMw_oqBuQ_UIbgWqiGuoXR7-CaKr2FAHb0VWkL-9rETsWq16cVWBVSBA1dbAke0veVe39QVVnihTw" charset="UTF-8"></script><base href="{{config["siteUrl"]}}">
+		<meta charset="UTF-8">
+		<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+		<title>tds</title>
+	{% endblock %}
+	{% block css %}
+		{{ css('https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css') }}
+		{{css('css/style.css') | raw}}
+	{% endblock %}
 </head>
 <body>
 {% block head %}
