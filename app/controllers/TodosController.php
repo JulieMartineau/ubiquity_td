@@ -66,8 +66,14 @@ class TodosController extends ControllerBase{
 
     #[Get(path: "todos/new/{force}", name:'todos.new')]
     public function newList($force=false){
-        USession::set(self::LIST_SESSION_KEY, []);
-        $this->displayList([]);
+        if(URequest::has('elements') || URequest::has('element') || $force!=1){
+            $this->warningMessage('Nouvelle liste', 'Une liste a déjà été créée. Souhaitez-vous la vider ?',
+                'warning', 'warning circle alternate',
+                [[ 'url'=>Router::path(''),'caption'=>'Annuler', 'style'=>'inverted' ]]);
+        } else {
+            USession::set(self::LIST_SESSION_KEY, []);
+            $this->displayList([]);
+        }
     }
 
     #[Get(path: "todos/saveList", name:'todos.save')]
