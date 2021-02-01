@@ -3,6 +3,7 @@
         {% for item in list %}
             <div class="item">
                 {{ item }}
+                <a href="{{ path('todos.delete',[loop.index0]) }}"></a>
             </div>
         {% endfor %}
 

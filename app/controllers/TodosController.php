@@ -36,7 +36,7 @@ class TodosController extends ControllerBase{
     #[Post(path: "todos/add", name:'todos.add')]
     public function addElement(){
         $list=USession::get(self::LIST_SESSION_KEY);
-        if(URequest::has('elements')){
+        if(URequest::filled('elements')){
             $elements=explode("\n", URequest::post('elements'));
             foreach ($elements as $elm){
                 $list[]=$elm;
@@ -51,29 +51,25 @@ class TodosController extends ControllerBase{
     #[Get(path: "todos/delete/{index}", name:'todos.delete')]
     public function deleteElement($index){
         $list=USession::get(self::LIST_SESSION_KEY);
-        if(URequest::has('elements')){
-            $elements=explode("\n", URequest::post('elements'));
-            foreach ($elements as $elm){
-                $list[]="";
-            }
-        }else {
-            $list[] = URequest::post('element');
+        if(isset($list[$index])){
+            array_splice($list, $index, 1);
+            USession::set(self::LIST_SESSION_KEY, $list);
         }
-        USession::set(self::LIST_SESSION_KEY, $list);
         $this->displayList($list);
+
     }
 
     #[Post(path: "todos/edit/{index}", name:'todos.edit')]
     public function editElements($index){
         $list=USession::get(self::LIST_SESSION_KEY);
-        if(URequest::has('index')){
+        /*if(URequest::has('index')){
             $elements=explode("\n", URequest::post('index'));
             foreach ($index as $elm){
                 $list[]=$elm;
             }
         }else {
             $list[] = URequest::post('element');
-        }
+        }*/
         USession::set(self::LIST_SESSION_KEY, $list);
         $this->displayList($list);
     }
@@ -88,15 +84,17 @@ class TodosController extends ControllerBase{
 
     #[Get(path: "todos/new/{force}", name:'todos.new')]
     public function newList($force=false){
-        if(URequest::has('elements') || URequest::has('element') || $force!= 1){
-            $this->showMessage('Nouvelle liste', 'Une liste existe déjà. Voulez-vous la vider ?',
+       if(USession::exists(self::LIST_SESSION_KEY)){
+            $this->showMessage('Nouvelle liste', 'Une liste a déjà été créée. Souhaitez-vous la vider ?',
                 'warning', 'warning circle alternate',
                 [['url'=>Router::path('todos.new'),'caption'=>'Créer une nouvelle liste', 'style'=>'basic inverted'],
-                    ['url'=>Router::path('todos.menu'),'caption'=>'Annuler', 'style'=>'basic inverted' ]]);
-        } else {
-            USession::set(self::LIST_SESSION_KEY, []);
+                    [ 'url'=>Router::path('todos.home'),'caption'=>'Annuler', 'style'=>'inverted' ]]);
             $this->displayList(USession::get(self::LIST_SESSION_KEY));
+        } else if ($force != false | !USession::exists(self::LIST_SESSION_KEY)){
+            USession::set(self::LIST_SESSION_KEY, []);
+            $this->displayList([]);
         }
+
     }
 
     #[Get(path: "todos/saveList", name:'todos.save')]
@@ -128,5 +126,7 @@ class TodosController extends ControllerBase{
         $this->jquery->renderDefaultView();
 
 	}
+
+
 
 }
