@@ -55,8 +55,9 @@ class TodosController extends ControllerBase{
             array_splice($list, $index, 1);
             USession::set(self::LIST_SESSION_KEY, $list);
         }
+        $this->showMessage('Suppression', 'élément à été supprimé',
+            'success', 'success inverted message');
         $this->displayList($list);
-
     }
 
     #[Post(path: "todos/edit/{index}", name:'todos.edit')]

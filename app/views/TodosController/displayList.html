@@ -3,7 +3,11 @@
         {% for item in list %}
             <div class="item">
                 {{ item }}
-                <a href="{{ path('todos.delete',[loop.index0]) }}"></a>
+                    <a href="{{ path('todos.delete',[index.loop0]) }}">
+                        <button class="ui circular mini icon inverted red button right floated">
+                            <i class="ui times icon"></i>
+                        </button>
+                    </a>
             </div>
         {% endfor %}
 
