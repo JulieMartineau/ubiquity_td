@@ -3,6 +3,8 @@ namespace controllers;
 use Ubiquity\attributes\items\router\Get;
 use Ubiquity\attributes\items\router\Route;
 use Ubiquity\attributes\items\router\Post;
+use Ubiquity\controllers\auth\AuthController;
+use Ubiquity\controllers\auth\WithAuthTrait;
 use Ubiquity\controllers\Router;
 use Ubiquity\utils\http\URequest;
 use Ubiquity\utils\http\USession;
@@ -12,7 +14,7 @@ use Ubiquity\utils\http\USession;
  * @property \Ajax\php\ubiquity\JsUtils $jquery
  */
 class TodosController extends ControllerBase{
-
+    use WithAuthTrait;
     const CACHE_KEY = 'datas/lists/';
     const EMPTY_LIST_ID='not saved';
     const LIST_SESSION_KEY='list';
@@ -52,11 +54,11 @@ class TodosController extends ControllerBase{
     public function deleteElement($index){
         $list=USession::get(self::LIST_SESSION_KEY);
         if(isset($list[$index])){
+            $this->showMessage('Suppression', 'élément à été supprimé',
+                'success', 'success inverted message');
             array_splice($list, $index, 1);
             USession::set(self::LIST_SESSION_KEY, $list);
         }
-        $this->showMessage('Suppression', 'élément à été supprimé',
-            'success', 'success inverted message');
         $this->displayList($list);
     }
 
@@ -129,5 +131,8 @@ class TodosController extends ControllerBase{
 	}
 
 
-
+    protected function getAuthController(): AuthController
+    {
+       return new MyAuth($this);
+    }
 }
