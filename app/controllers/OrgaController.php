@@ -10,27 +10,28 @@ use Ubiquity\orm\repositories\ViewRepository;
   * Controller OrgaController
   */
 class OrgaController extends ControllerBase{
-    //private ViewRepository $repo;
+    private ViewRepository $repo;
 
-    /*public function initialize()
+    public function initialize()
     {
         parent::initialize();
         $this->repo=new ViewRepository($this,Organization::class);
-    }*/
+    }
 
     #[Route('orga')]
 	public function index(){
-        //$this->repo->all("",false);
-		$orgas=DAO::getAll(Organization::class, "",false);
-		$this->loadView("OrgaController/index.html",['orgas'=>$orgas]);
+        $this->repo->all("",false);
+		//$orgas=DAO::getAll(Organization::class, "",false);
+		$this->loadView("OrgaController/index.html");
 
 
 	}
 
 	#[Route(path: "orga/{idOrga}",name: "orga.getOne")]
 	public function getOne($idOrga){
-		$orga=DAO::getById(Organization::class,$idOrga,['users.groupes','groupes.users']);
-		$this->loadDefaultView(['orga'=>$orga]);
+        $this->repo->byId($idOrga,['users.groupes','groupes.users'], false);
+		//$orga=DAO::getById(Organization::class,$idOrga,['users.groupes','groupes.users']);
+		$this->loadDefaultView();
 	}
 
 }
