@@ -2,8 +2,8 @@
 namespace controllers;
 use models\Organization;
 use Ubiquity\attributes\items\router\Route;
- use models\Groupe;
- use Ubiquity\orm\DAO;
+use models\Groupe;
+use Ubiquity\orm\DAO;
 use Ubiquity\orm\repositories\ViewRepository;
 
 /**
@@ -21,13 +21,13 @@ class OrgaController extends ControllerBase{
     #[Route('orga')]
 	public function index(){
         //$this->repo->all("",false);
-		$orgas=DAO::getAll(Organization::class, "",false );
+		$orgas=DAO::getAll(Organization::class, "",false);
 		$this->loadView("OrgaController/index.html",['orgas'=>$orgas]);
 
 
 	}
 
-	#[Route(path: "orga/idOrga",name: "orga.getOne")]
+	#[Route(path: "orga/{idOrga}",name: "orga.getOne")]
 	public function getOne($idOrga){
 		$orga=DAO::getById(Organization::class,$idOrga,['users.groupes','groupes.users']);
 		$this->loadDefaultView(['orga'=>$orga]);
