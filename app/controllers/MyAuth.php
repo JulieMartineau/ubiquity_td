@@ -2,7 +2,9 @@
 namespace controllers;
  use models\User;
  use Ubiquity\attributes\items\router\Route;
+ use Ubiquity\controllers\auth\AuthFiles;
  use Ubiquity\orm\DAO;
+ use Ubiquity\utils\flash\FlashMessage;
  use Ubiquity\utils\http\URequest;
  use Ubiquity\utils\http\UResponse;
  use Ubiquity\utils\http\USession;
@@ -63,13 +65,20 @@ class MyAuth extends \Ubiquity\controllers\auth\AuthController {
 
     }
 
-    /*protected function noAccessMessage(FlashMessage $fMessage){
+    protected function noAccessMessage(FlashMessage $fMessage){
 	    $fMessage->setTitle('Accès interdit');
 	    $fMessage->setContent("Vous n'êtes pas autorisé à accèder à cette ressource.");
-    }*/
-
-    public function _isValidUser($action = null)
-    {
-        // TODO: Implement _isValidUser() method.
     }
+
+    public function _isValidUser($action = null){
+        return USession::exists($this->_getUserSessionKey());
+    }
+    public function _getBaseRoute(){
+        return '/login';
+    }
+
+    protected function getFiles(): AuthFiles{
+	    return new MyAuthFiles();
+    }
+
 }
