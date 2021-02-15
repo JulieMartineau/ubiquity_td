@@ -1,5 +1,6 @@
 <?php
 namespace controllers;
+use Ubiquity\attributes\items\router\Post;
 use models\Organization;
 use Ubiquity\attributes\items\router\Route;
 use models\Groupe;
@@ -33,5 +34,15 @@ class OrgaController extends ControllerBase{
 		//$orga=DAO::getById(Organization::class,$idOrga,['users.groupes','groupes.users']);
 		$this->loadDefaultView();
 	}
+
+
+	#[Post(path: "orga/add",name: "orga.add")]
+	public function add(){
+		
+	}
+	#[Route()]
+	public function getOrga($name,$aliases){
+        $orga=DAO::getOne( Organization::class,"name= ? and aliases= ?",parameters:[$name, $aliases]);
+    }
 
 }
