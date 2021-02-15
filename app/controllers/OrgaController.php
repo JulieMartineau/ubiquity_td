@@ -6,6 +6,7 @@ use Ubiquity\attributes\items\router\Route;
 use models\Groupe;
 use Ubiquity\orm\DAO;
 use Ubiquity\orm\repositories\ViewRepository;
+use Ubiquity\utils\http\URequest;
 
 /**
   * Controller OrgaController
@@ -38,11 +39,30 @@ class OrgaController extends ControllerBase{
 
 	#[Post(path: "orga/add",name: "orga.add")]
 	public function add(){
+
 		
 	}
 	#[Route()]
 	public function getOrga($name,$aliases){
         $orga=DAO::getOne( Organization::class,"name= ? and aliases= ?",parameters:[$name, $aliases]);
+    }
+
+    public function testInsert(){
+        $groupe=new Groupe();
+        URequest::setValuesToObject($groupe);
+        $idOrga=URequest::post('idOrga');
+        $orga=DAO::getById(Organization::class,$idOrga);
+        $groupe->setOrganization($orga);
+        DAO::insert($orga);
+    }
+
+    public function testUpdate(){
+        $groupe=DAO::getById(Groupe::class,URequest::post('idGroupe'));
+        URequest::setValuesToObject($groupe);
+        $idOrga=URequest::post('idOrga');
+        $orga=DAO::getById(Organization::class,$idOrga);
+        $groupe->setOrganization($orga);
+        DAO::update($orga);
     }
 
 }
