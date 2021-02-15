@@ -60,6 +60,7 @@ class MyAuth extends \Ubiquity\controllers\auth\AuthController {
                 }
             }
         }
+
     }
 
     /*protected function noAccessMessage(FlashMessage $fMessage){
