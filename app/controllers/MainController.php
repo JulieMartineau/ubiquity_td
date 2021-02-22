@@ -6,6 +6,7 @@ namespace controllers;
  use services\ui\UIGroups;
  use Ubiquity\attributes\items\di\Autowired;
  use Ubiquity\attributes\items\router\Get;
+ use Ubiquity\attributes\items\router\Post;
  use Ubiquity\attributes\items\router\Route;
  use Ubiquity\controllers\auth\AuthController;
  use Ubiquity\controllers\auth\WithAuthTrait;
@@ -64,5 +65,22 @@ use WithAuthTrait;
     public function newUser(){
         $this->ui->newUser('frm-user');
         $this->jquery->renderView('main/vForm.html');
+    }
+
+    #[Post('new/user', name: 'new.userPost')]
+    public function newUserPost(){
+        $idOrga=USession::get('idOrga');
+        $orga=DAO::getById(Organization::class,$idOrga,false);
+        $user=new User();
+        URequest::setValuesToObject($user);
+        $user->setEmail(\strtolower($user->getFirstname().'.'.$user->getLastname().'@'.$orga->getDomain()));
+        $user->setOrganization($orga);
+        if(DAO::insert($user)){
+            $count=DAO::count(User::class,'idOrganization= ?',[$idOrga]);
+            $this->jquery->execAtLast('$("#users-count").html("'.$count.'")');
+            $this->showMessage("Ajout d'utilisateur","L'utilisateur $user a été ajouté à l'organisation.",'success','check square outline');
+        }else{
+            $this->showMessage("Ajout d'utilisateur","Aucun utilisateur n'a été ajouté",'error','warning circle');
+        }
     }
 }
