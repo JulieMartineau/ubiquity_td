@@ -26,7 +26,7 @@ use WithAuthTrait;
 
     public function initialize(){
         parent::initialize();
-        $this->uiService=new UIGroups($this);
+        $this->uiService = new UIGroups($this);
     }
 
 
