@@ -70,7 +70,7 @@ use WithAuthTrait;
     #[Get('new/user', name: 'new.user')]
     public function newUser(){
         $this->uiService->newUser('frm-user');
-        $this->jquery->renderView('main/vForm.html');
+        $this->jquery->renderView('main/vForm.html',['formName'=>'frm-user']);
     }
 
     #[Post('addOrga',name:'addOrga')]
