@@ -10,10 +10,18 @@ class CrudUsersDatas extends CRUDDatas{
         return ['Prénom','Nom','Email','Suspendu?','Groupes'];
     }
 
-    public function getFormFieldNames($model, $instance)
-    {
-        return parent::getFormFieldNames($model, $instance);
+    public function getFormFieldNames($model, $instance){
+        return ['Prénom','Nom','Email','Suspendu?','Groupes'];
     }
+
+    public function _getInstancesFilter($model){
+        return parent::_getInstancesFilter($model);//todo
+    }
+
+    public function getManyToManyDatas($fkClass, $instance, $member){
+        return parent::getManyToManyDatas($fkClass, $instance, $member);//todo
+    }
+
 
 
 }

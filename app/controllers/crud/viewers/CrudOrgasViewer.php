@@ -14,7 +14,7 @@ class CrudOrgasViewer extends ModelViewer{
             return HtmlLabel::tag('',count($v));
         });
         return $dt;
-}
+    }
 
     protected function getDataTableRowButtons()
     {
