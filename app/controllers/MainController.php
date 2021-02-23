@@ -1,6 +1,7 @@
 <?php
 namespace controllers;
  use models\Group;
+ use models\Organization;
  use models\User;
  use services\dao\OrgaRepository;
  use services\ui\UIGroups;
@@ -60,11 +61,21 @@ use WithAuthTrait;
         $this->uiService->listGroups($groups);
         $this->jquery->renderDefaultView();
     }
+    #[Get('newOrga',name:'newOrga')]
+    public function orgaForm(){
+        $this->uiService->orgaForm(new Organization());
+        $this->jquery->renderDefaultView();
+    }
 
     #[Get('new/user', name: 'new.user')]
     public function newUser(){
-        $this->ui->newUser('frm-user');
+        $this->uiService->newUser('frm-user');
         $this->jquery->renderView('main/vForm.html');
+    }
+
+    #[Post('addOrga',name:'addOrga')]
+    public function addOrga(){
+        var_dump($_POST);
     }
 
     #[Post('new/user', name: 'new.userPost')]

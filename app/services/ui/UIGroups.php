@@ -1,7 +1,12 @@
 <?php
 namespace services\ui;
 
+ use Ajax\semantic\html\collections\form\HtmlForm;
+ use Ajax\semantic\widgets\dataform\DataForm;
+ use models\Group;
+ use models\User;
  use Ubiquity\controllers\Controller;
+ use Ubiquity\controllers\Router;
 
  /**
   * Class UIGroups
@@ -35,6 +40,16 @@ class UIGroups extends \Ajax\php\ubiquity\UIService{
         $frm->fieldAsLabeledInput('firstname',['rules'=>'empty']);
         $frm->fieldAsLabeledInput('lastname',['rules'=>'empty']);
         $this->addFormBehavior($formName,$frm,'#new-user','new.userPost');
+    }
+
+    public function orgaForm(\models\Organization $orga){
+        $frm= $this->semantic->dataForm('frmOrga',$orga);
+        $frm->setFields(['id','name','domain','submit']);
+        $frm->fieldAsHidden('id');
+        $frm->fieldAsLabeledInput('name',['rules'=>'empty']);
+        $frm->fieldAsLabeledInput('domain',['rules'=>'empty','email']);
+        $frm->setValidationParams(["on"=>"blur","inline"=>true]);
+        $frm->fieldAsSubmit('submit','positive',Router::path('addOrga'),'#response');
     }
 
 }
