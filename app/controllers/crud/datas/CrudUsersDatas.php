@@ -7,7 +7,7 @@ use Ubiquity\controllers\crud\CRUDDatas;
   */
 class CrudUsersDatas extends CRUDDatas{
     public function getFieldNames($model){
-        return ['Prénom','Nom','Email','Suspendu?','Groupes'];
+        return ['Firstname','Lastname','Email','Suspended','Groups'];
     }
 
     public function getFormFieldNames($model, $instance){
