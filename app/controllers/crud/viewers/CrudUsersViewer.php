@@ -8,7 +8,7 @@ use Ubiquity\controllers\crud\viewers\ModelViewer;
   */
 class CrudUsersViewer extends ModelViewer{
     public function getCaptions($captions, $className){
-        return parent::getCaptions($captions, $className);//todo
+        return ['Prénom','Nom','Email','Suspendu?','Groupes'];
     }
 
     public function getModelDataTable($instances, $model, $totalCount, $page = 1){
