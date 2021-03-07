@@ -42,6 +42,15 @@ class UIGroups extends \Ajax\php\ubiquity\UIService{
         $this->addFormBehavior($formName,$frm,'#new-user','new.userPost');
     }
 
+    public function newGroup($formName){
+        $frm=$this->semantic->dataForm($formName,new Group());
+        $frm->addClass('inline');
+        $frm->setFields('name');
+        $frm->setCaptions('Nom');
+        $frm->fieldAsLabeledInput('name',['rules'=>'empty']);
+        $this->addFormBehavior($formName,$frm,'#new-group','new.groupPost');
+    }
+
     public function orgaForm(\models\Organization $orga){
         $frm= $this->semantic->dataForm('frmOrga',$orga);
         $frm->setFields(['id','name','domain','submit']);

@@ -72,6 +72,27 @@ use WithAuthTrait;
         $this->uiService->newUser('frm-user');
         $this->jquery->renderView('main/vForm.html',['formName'=>'frm-user']);
     }
+    #[Get('new/group', name: 'new.group')]
+    public function newGroup(){
+        $this->ui->newGroup('frm-group');
+        $this->jquery->renderView('main/vForm.html',['formName'=>'frm-group']);
+    }
+    #[Post('new/group', name: 'new.groupPost')]
+    public function newGroupPost(){
+        $idOrga=USession::get('idOrga');
+        $orga=DAO::getById(Organization::class,$idOrga,false);
+        $group=new Group();
+        URequest::setValuesToObject($group);
+        $group->setEmail(\strtolower($group->getFirstname().'.'.$group->getLastname().'@'.$orga->getDomain()));
+        $group->setOrganization($orga);
+        if(DAO::insert($group)){
+            $count=DAO::count(User::class,'idOrganization= ?',[$idOrga]);
+            $this->jquery->execAtLast('$("#group-count").html("'.$count.'")');
+            $this->showMessage("Ajout d'un groupe'","Le groupe $group a été ajouté à l'organisation.",'success','check square outline');
+        }else{
+            $this->showMessage("Ajout d'un groupe","Aucun groupe n'a été ajouté",'error','warning circle');
+        }
+    }
 
     #[Post('addOrga',name:'addOrga')]
     public function addOrga(){
