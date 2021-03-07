@@ -16,8 +16,11 @@ class CrudOrgasViewer extends ModelViewer{
         return $dt;
     }
 
-    protected function getDataTableRowButtons()
-    {
+    public function getCaptions($captions, $className){
+        return ['nom','domaine','groupe'];
+    }
+
+    protected function getDataTableRowButtons(){
         return ['display', 'edit', 'delete'];
     }
 }
