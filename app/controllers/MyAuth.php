@@ -1,5 +1,11 @@
 <?php
 namespace controllers;
+use models\User;
+use Ubiquity\attributes\items\router\Get;
+use Ubiquity\controllers\Startup;
+use Ubiquity\orm\DAO;
+use Ubiquity\utils\flash\FlashMessage;
+use Ubiquity\utils\http\UResponse;
 use Ubiquity\utils\http\USession;
 use Ubiquity\utils\http\URequest;
 use controllers\auth\files\MyAuthFiles;
@@ -9,28 +15,47 @@ use Ubiquity\attributes\items\router\Route;
 #[Route(path: "/login",inherited: true,automated: true)]
 class MyAuth extends \Ubiquity\controllers\auth\AuthController{
 
-	protected function onConnect($connected) {
-		$urlParts=$this->getOriginalURL();
-		USession::set($this->_getUserSessionKey(), $connected);
-		if(isset($urlParts)){
-			$this->_forward(implode("/",$urlParts));
-		}else{
-			//TODO
-			//Forwarding to the default controller/action
-		}
-	}
+    protected function onConnect($connected) {
+        $urlParts=$this->getOriginalURL();
+        USession::set($this->_getUserSessionKey(), $connected);
+        if(isset($urlParts)){
+            $url=implode("/",$urlParts);
+            if(!str_contains($url, 'direct')) {
+                //return $this->_forward(implode("/", $urlParts));
+            }
+        }
+        UResponse::header('location','/');
+    }
 
-	protected function _connect() {
-		if(URequest::isPost()){
-			$email=URequest::post($this->_getLoginInputName());
-			$password=URequest::post($this->_getPasswordInputName());
-			//TODO
-			//Loading from the database the user corresponding to the parameters
-			//Checking user creditentials
-			//Returning the user
-		}
-		return;
-	}
+    #[Get(name:'login.direct')]
+    public function direct($name){
+        $name=urldecode($name);
+        $user = DAO::getOne(User::class, 'email= ?', false, [$name]);
+        if($user) {
+            USession::set('idOrga', $user->getOrganization());
+            return $this->onConnect($user);
+        }
+        $this->_invalid=true;
+        $this->initializeAuth();
+        $this->onBadCreditentials ();
+        $this->finalizeAuth();
+    }
+
+    protected function _connect() {
+        if(URequest::isPost()){
+            $email=URequest::post($this->_getLoginInputName());
+            if($email!=null) {
+                $password = URequest::post($this->_getPasswordInputName());
+                $user = DAO::getOne(User::class, 'email= ?', false, [$email]);
+                if(isset($user)) {
+                    //USession::set('idOrga', $user->getOrganization());
+                    return $user->getName();
+                }
+            }
+        }
+
+        return;
+    }
 	
 	/**
 	 * {@inheritDoc}
@@ -47,6 +72,39 @@ class MyAuth extends \Ubiquity\controllers\auth\AuthController{
 	protected function getFiles(): AuthFiles{
 		return new MyAuthFiles();
 	}
+
+    public function _displayInfoAsString() {
+        return true;
+    }
+
+    protected function finalizeAuth() {
+        if(!URequest::isAjax() && Startup::getAction()!=='direct'){
+            $this->loadView('@activeTheme/main/vFooter.html');
+        }
+    }
+
+    protected function initializeAuth() {
+        if(!URequest::isAjax() && Startup::getAction()!=='direct'){
+            $this->loadView('@activeTheme/main/vHeader.html');
+        }
+    }
+
+    public function _getBodySelector() {
+        return '#page-container';
+    }
+
+    protected function noAccessMessage(FlashMessage $fMessage) {
+        $fMessage->setTitle('Accès interdit !');
+        $u=USession::get('urlParts');
+        $url=implode('/',$u);
+        $url=($url=='_default')?'/':$url;
+        $fMessage->setContent("Vous n'êtes pas autorisé à accéder à cette page (".$url.").");
+    }
+
+    protected function terminateMessage(FlashMessage $fMessage) {
+        $fMessage->setTitle('Fermeture');
+        $fMessage->setContent("Vous avez été correctement déconnecté de l'application.");
+    }
 
 
 
