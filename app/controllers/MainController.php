@@ -24,6 +24,7 @@ use WithAuthTrait;
 
     public function initialize() {
         parent::initialize();
+        $this->jquery->getHref('a[data-target]','',['ListenerOn'=>'body']);
     }
     protected function getAuthController(): AuthController {
         return new MyAuth($this);
@@ -31,7 +32,12 @@ use WithAuthTrait;
     #[Route('store',name:'store')]
     public function store(){
         $sections=DAO::getAll(Section::class,'', ['products']);
-        $this->loadView('MainController/store.html',['section'=>$sections]);
+        $this->loadView('MainController/store.html',['sections'=>$sections]);
+    }
+    #[Route('section/{id}', name:'section')]
+    public function sectionStore($id){
+        $section=DAO::getById(Section::class,$id,['products']);
+        $this->loadView('MainController/sectionStore.html', ['section'=>$section]);
     }
 
 }
