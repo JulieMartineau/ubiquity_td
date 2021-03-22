@@ -7,11 +7,14 @@
             </a>
             {% endfor %}
         </div>
+    </div>
         <div class="twelve wide stretched column">
             <div class="ui segment">
-
+                {% if content == false %}
+                    {{ promoEnCours | raw }}
+                {% endif %}
+                {{ content | raw }}
             </div>
         </div>
-    </div>
 </div>
 {{ script_foot | raw }}

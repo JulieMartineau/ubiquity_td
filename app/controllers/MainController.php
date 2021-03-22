@@ -8,6 +8,7 @@ use Ubiquity\attributes\items\router\Route;
 use Ubiquity\controllers\auth\AuthController;
 use Ubiquity\controllers\auth\WithAuthTrait;
 use Ubiquity\orm\DAO;
+use Ubiquity\utils\http\URequest;
 
 /**
   * Controller MainController
@@ -30,13 +31,19 @@ use WithAuthTrait;
         return new MyAuth($this);
     }
     #[Route('store',name:'store')]
-    public function store(){
+    public function store($content=""){
         $sections=DAO::getAll(Section::class,'', ['products']);
-        $this->loadView('MainController/store.html',['sections'=>$sections]);
+        $product=DAO::getAll(Product::class,'promotion<?', false, [0]);
+        //$promoEnCours=$this->loadView('MainController/sectionStore',['product'=>$product], true);
+        $this->jquery->renderView('MainController/store.html',['sections'=>$sections,'content'=>$content]);
     }
     #[Route('section/{id}', name:'section')]
     public function sectionStore($id){
         $section=DAO::getById(Section::class,$id,['products']);
+        if(!URequest::isAjax()){
+            $this->store($this->loadView('MainController/sectionStore.html',['section'=>$section],true));
+            return;
+        }
         $this->loadView('MainController/sectionStore.html', ['section'=>$section]);
     }
 

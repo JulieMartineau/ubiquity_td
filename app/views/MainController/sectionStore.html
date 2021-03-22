@@ -1,4 +1,9 @@
 <h1>{{ section.name }}</h1>
-{% for produit in section.products %}
-    {{ produit.name }}
-{% endfor %}
+<div class="ui grid container">
+    <div class="four wide column">
+            {% for produit in section.products %}
+                {{ produit.name }}
+            {% endfor %}
+    </div>
+
+</div>
