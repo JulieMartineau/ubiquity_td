@@ -47,4 +47,15 @@ use WithAuthTrait;
         $this->loadView('MainController/sectionStore.html', ['section'=>$section]);
     }
 
+    #[Route('product/{idS}/{idP}',name: 'product')]
+    public function product($idS, $idP){
+        $section=DAO::getById(Section::class, $idS, false);
+        $product=DAO::getById(Product::class, $idP, false);
+        if(!URequest::isAjax()){
+            $this->store($this->loadView('MainController/product.html',['section'=>$section,'product'=>$product],true));
+            return;
+        }
+        $this->loadView('MainController/product.html',['section'=>$section,'produit'=>$product]);
+    }
+
 }
