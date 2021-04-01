@@ -52,10 +52,11 @@ use WithAuthTrait;
         $section=DAO::getById(Section::class, $idS, false);
         $product=DAO::getById(Product::class, $idP, false);
         if(!URequest::isAjax()){
-            $this->store($this->loadView('MainController/product.html',['section'=>$section,'product'=>$product],true));
+            $content=$this->loadView('MainController/product.html',['product'=>$product,'section'=>$section],true);
+            $this->store($content);
             return;
         }
-        $this->loadView('MainController/product.html',['section'=>$section,'produit'=>$product]);
+        $this->loadView('MainController/product.html',['product'=>$product,'section'=>$section]);
     }
 
 }
