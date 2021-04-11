@@ -1,5 +1,6 @@
 <?php
 namespace controllers;
+use models\Basket;
 use models\Order;
 use models\Product;
 use models\Section;
@@ -9,6 +10,7 @@ use Ubiquity\controllers\auth\AuthController;
 use Ubiquity\controllers\auth\WithAuthTrait;
 use Ubiquity\orm\DAO;
 use Ubiquity\utils\http\URequest;
+use Ubiquity\utils\http\USession;
 
 /**
   * Controller MainController
@@ -57,6 +59,18 @@ use WithAuthTrait;
             return;
         }
         $this->loadView('MainController/product.html',['product'=>$product,'section'=>$section]);
+    }
+
+    /**
+     * @return Basket
+     */
+    private function getBasket(){
+        return USession::get('basket', new Basket());
+    }
+
+    #[Route('basket',name: 'basket')]
+    public function basket(){
+        $basket = $this->getBasket();
     }
 
 }
