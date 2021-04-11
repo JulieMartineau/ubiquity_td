@@ -1,10 +1,12 @@
 <?php
 namespace controllers;
 use models\Basket;
+use models\Basketdetail;
 use models\Order;
 use models\Product;
 use models\Section;
 use models\User;
+use Ubiquity\attributes\items\router\Get;
 use Ubiquity\attributes\items\router\Route;
 use Ubiquity\contents\validation\ValidatorsManager;
 use Ubiquity\controllers\auth\AuthController;
@@ -72,6 +74,16 @@ use WithAuthTrait;
     #[Route('basket',name: 'basket')]
     public function basket(){
         $basket = $this->getBasket();
+    }
+    #[Get('basket/add/{id}',name: 'basket.add')]
+    public function basketAdd($id, $price){
+        $this->index();
+        $basketD = new Basketdetail();
+        $basketD->setIdProduct($id);
+        $basketD->setQuantity(1);
+        $basket = $this->getBasket();
+        $basket->addMontant($price);
+        USession::set('basket',$basket);
     }
 
     #[Route('/form',name:'form')]
